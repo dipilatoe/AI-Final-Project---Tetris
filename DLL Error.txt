@@ -1,0 +1,4 @@
+If the game does not start, you probably have to install 'Microsoft Visual C++ Redisributable'.
+You can download it here for free:
+
+http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf
