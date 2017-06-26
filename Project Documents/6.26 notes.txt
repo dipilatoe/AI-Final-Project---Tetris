@@ -1,0 +1,8 @@
+problemstate - list of coords for given piece in play & T/F array to see what grid already has
+
+greedy - search for lowest valid position as goal state, feed to BFS for actions
+
+optimal - expectiminimax with given piece, preivew piece and upcoming unknowns, possibly depth restricted and pruned
+
+random - randomly choose to go left, right or rotate on each tick
+
