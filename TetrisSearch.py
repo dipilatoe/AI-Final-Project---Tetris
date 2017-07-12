@@ -15,7 +15,7 @@ class RandomAgent():
                         if y > position[2]:
                             positions.pop()
                             positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
-        if TetrisApp.stone == tetris_shapes[5]: #shape is line, run twice (one rotation)
+        if TetrisApp.stone == tetris_shapes[5] or TetrisApp.stone == tetris_shapes[1] or TetrisApp.stone == tetris_shapes[2]: #shape is line, Z or S, run twice (one rotation)
         #ADD IN ROTATION
             for z in range(2):
                 for x in range(10):
