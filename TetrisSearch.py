@@ -3,24 +3,28 @@ import tetris
 from tetris import TetrisApp
 
 class RandomAgent():
+    #generates list of final positions
+    def getActions():
+        positions = []
+        for x in range(10)
+            for y in range(22)
+                if not check_collision
+    #chooses randomly a final position from a list of all available final positions
     def getAction(self, gameState):
         actionList = state.getActions(TetrisApp.stone)
         return actionList[randint(0,len(actionList))]
 
-
 class ExpectimaxAgent():
-   
-     
+    
     def getAction(self, gameState):
      
-        return self.value(gameState, self.depth-1, tetris.TetrisApp.stone)
+        return self.value(gameState, self.depth-1, 1)
     def value(self, state, depthLimit, currentDepth, currentPiece):
-        
+        if(state.isGameOver()):
+            return self.evaluationFunction(state)
 
 		#get successor states if not terminal
         if(currentPiece is not 0):
-            if(tetris.TetrisApp.isGameOver(state,currentPiece)):
-                return -9999999
             successorList = list()
             actionList = state.getActions(currentPiece)
         #get averages with each on the shape list
@@ -32,11 +36,7 @@ class ExpectimaxAgent():
 
 		#return action at top of tree
         if(currentDepth==0):
-<<<<<<< HEAD
-            scoreHold, action = max([(self.value(state.generateSuccessor(tetris.TetrisApp.stone, x), depthLimit,1, tetris.TetrisApp.next_stone),x) for x in actionList])
-=======
             scoreHold, action = max([(self.value(state.generateSuccessor(TetrisApp.stone, x), depthLimit,1, 1),x) for x in actionList])
->>>>>>> c4af175cc591c0c87b330b2f56e458935d81c216
             return action
         #for previewed piece
 	    if(currentDepth==1):
@@ -49,4 +49,6 @@ class ExpectimaxAgent():
 	    #all other cases (standard)
         return max(self.value(state.generatesuccessor(currentPiece,x) depthLimit, currentDepth+1, 0) for x in actionList)
     def evaluationFunction(state):
+        if state.isGameOver():
+	        return 0
         return state.getScore() * (1/len(getPieces.asList())
