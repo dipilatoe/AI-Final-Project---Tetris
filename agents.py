@@ -12,7 +12,8 @@ class Agents
             successors.append(tetris.join_matrices(TetrisApp.board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
         if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
             successors.append(tetris.join_matrices(TetrisApp.board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
-        #add in rotation successor
+        TetrisApp.rotate_stone
+        successors.append(tetris.join_matrices(TetrisApp.board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
         return successors
     
     def randomAgent():
