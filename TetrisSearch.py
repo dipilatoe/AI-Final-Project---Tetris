@@ -1,4 +1,11 @@
-class ExpectimaxAgent(MultiAgentSearchAgent):
+from random import randint
+
+class RandomAgent():
+    def getAction(self, gameState):
+        actionList = state.getActions(tetris.TetrisApp.stone)
+        return actionList[randint(0,len(actionList))]
+
+class ExpectimaxAgent():
    
      
     def getAction(self, gameState):
