@@ -6,14 +6,36 @@ class RandomAgent():
     #generates list of final positions
     def getActions():
         positions = []
-        for x in range(10)
-            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
-            for y in range(22)
-                if not check_collision(board, TetrisApp.stone, (x,y))
-                    position = positions[x]
-                    if y > position[2]
-                        positions.pop()
-                        positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+        if TetrisApp.stone == tetris_shapes[6]:  #shape is square, run code once
+            for x in range(10):
+                positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+                for y in range(22):
+                    if not check_collision(board, TetrisApp.stone, (x,y)):
+                        position = positions[x]
+                        if y > position[2]:
+                            positions.pop()
+                            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+        if TetrisApp.stone == tetris_shapes[5]: #shape is line, run twice (one rotation)
+        #ADD IN ROTATION
+            for z in range(2):
+                for x in range(10):
+                    positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+                    for y in range(22):
+                        if not check_collision(board, TetrisApp.stone, (x,y)):
+                            position = positions[x]
+                            if y > position[2]:
+                                positions.pop()
+                                positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+        else: #run four times (three rotations)
+        #ADD IN ROTATION
+            for x in range(10):
+                positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+                for y in range(22):
+                    if not check_collision(board, TetrisApp.stone, (x,y)):
+                        position = positions[x]
+                        if y > position[2]:
+                            positions.pop()
+                            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
         
         return positions
     #chooses randomly a final position from a list of all available final positions
