@@ -7,8 +7,15 @@ class RandomAgent():
     def getActions():
         positions = []
         for x in range(10)
+            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
             for y in range(22)
-                if not check_collision
+                if not check_collision(board, TetrisApp.stone, (x,y))
+                    position = positions[x]
+                    if y > position[2]
+                        positions.pop()
+                        positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+        
+        return positions
     #chooses randomly a final position from a list of all available final positions
     def getAction(self, gameState):
         actionList = state.getActions(TetrisApp.stone)
