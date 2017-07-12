@@ -25,6 +25,8 @@ class ExpectimaxAgent():
 
 		#get successor states if not terminal
         if(currentPiece is not 0):
+            if(tetris.TetrisApp.isGameOver(state,currentPiece)):
+                return -9999999
             successorList = list()
             actionList = state.getActions(currentPiece)
         #get averages with each on the shape list
@@ -49,6 +51,4 @@ class ExpectimaxAgent():
 	    #all other cases (standard)
         return max(self.value(state.generatesuccessor(currentPiece,x) depthLimit, currentDepth+1, 0) for x in actionList)
     def evaluationFunction(state):
-        if state.isGameOver():
-	        return 0
         return state.getScore() * (1/len(getPieces.asList())
