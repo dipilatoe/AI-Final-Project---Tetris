@@ -3,10 +3,12 @@ from tetris import TetrisApp
 
 class Agents
 
-    def getGameState(): #ED
+    #returns the base coordinate for the stone, the current state of the game board, and the next stone
+    def getGameState():
         return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone
     
-    def generateSuccessor():    #ED
+    #generates a list of successors of potential states where the stone has moved left/right or rotated
+    def generateSuccessor():
         successors = []
         if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
             successors.append(tetris.join_matrices(TetrisApp.board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
