@@ -4,7 +4,7 @@ from tetris import TetrisApp
 
 #returns the base coordinate for the stone, the current state of the game board, and the next stone
 def getGameState():
-    return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone
+    return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone, tetris.TetrisApp.score, TetrisApp.stone
 
 #generates a list of successors of potential states where the stone has moved left/right or rotated
 def generateSuccessor():
@@ -94,4 +94,4 @@ class ExpectimaxAgent():
 	    #all other cases (standard)
         return max(self.value(state.generatesuccessor(currentPiece,x) depthLimit, currentDepth+1, 0) for x in actionList)
     def evaluationFunction(state):
-        return state.getScore() * (1/len(getPieces.asList())
+        return state[4] * (1/len(getPieces.asList())
