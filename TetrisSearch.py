@@ -4,10 +4,11 @@ from tetris import TetrisApp
 
 #returns the base coordinate for the stone, the current state of the game board, and the next stone
 def getGameState():
-    return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone, tetris.TetrisApp.score, TetrisApp.stone
+    return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone, TetrisApp.score, TetrisApp.stone
 
 #generates a list of successors of potential states where the stone has moved left/right or rotated
-def generateSuccessor():
+#CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
+def generateSuccessor(self, gameState):
     successors = []
     if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
         successors.append(tetris.join_matrices(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
@@ -18,7 +19,8 @@ def generateSuccessor():
     return successors
 
 #generates list of final positions
-def getActions():
+#CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
+def getActions(self, gameState):
     positions = []
     if TetrisApp.stone == tetris_shapes[6]:  #shape is square, run code once
         for x in range(10):
