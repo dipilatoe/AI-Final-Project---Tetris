@@ -50,16 +50,14 @@ class ExpectimaxAgent():
      
         return self.value(gameState, self.depth-1, 1)
     def value(self, state, depthLimit, currentDepth, currentPiece):
-        if(state.isGameOver()):
-            return self.evaluationFunction(state)
 
-		#get successor states if not terminal
+		#get successor states if not terminal, returns low negative number if it is terminal.
         if(currentPiece is not 0):
             if(tetris.TetrisApp.isGameOver(state,currentPiece)):
                 return -9999999
             successorList = list()
             actionList = state.getActions(currentPiece)
-        #get averages with each on the shape list
+        #if no shape is set, generate list of shapes and get expected value (average) of best move with each shape
         else:
             avg = 0.0
             for x in tetris.tetris_shapes:
