@@ -6,18 +6,6 @@ from tetris import TetrisApp
 def getGameState():
     return TetrisApp.stone_x, TetrisApp.stone_y, board, TetrisApp.next_stone, TetrisApp.score, TetrisApp.stone
 
-#generates a list of successors of potential states where the stone has moved left/right or rotated
-#CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
-#def generateSuccessor(self, gameState, stone, action):
-#    successors = []
-#    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
-#        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
-#    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
-#        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
-#    TetrisApp.rotate_stone
-#    successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
-#    return successors
-
 #generates list of final positions (RETURN LIST OF TUPLES - CONTAINS PIECE'S FINAL X POSITION, FINAL Y POSITION, SHAPE)
 def finalPositions(self, board, piece):
     positions = []
@@ -101,3 +89,39 @@ class ExpectimaxAgent():
     def evaluationFunction(board):
         return board[4] * (1/len(getPieces.asList())
 		#^Need to change this to count filled pieces, not yet implemented.
+        
+class SolutionSearch():
+    
+    def isGoalState():
+    
+    #generates a list of successors of potential states where the stone has moved left/right or rotated
+    #CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
+    def generateSuccessor(self, gameState, stone, action):
+        successors = []
+        if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
+            successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
+        if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
+            successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
+        TetrisApp.rotate_stone
+        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
+        return successors
+    
+    #IMPLEMENT QUEUE FOR FRONTIER
+    #ADAPT TO TETRIS
+    def graphSearch(problem, frontier):
+        explored = set()	#list of nodes that have been explored
+        initialState = problem.getStartState()	#fetches the initial state of the problem
+        
+        frontier.push((initialState, [], 0))	#creates the frontier
+        while frontier:	#continues until the frontier is empty, at the end just returns an empty set in absense of a solution
+            node, actions, cost = frontier.pop()	#removes from the frontier the current node to be expanded
+            if not node in explored: #if that node is not in explored then we expand it and also add it to explored
+                explored.add(node)
+                if problem.isGoalState(node): #goal state check
+                    return actions
+                successors = problem.getSuccessors(node) #expanding the node
+                for successor in successors:	#adding each expansion into the frontier
+                    coordinate, direction, moveCost = successor
+                    newActions = actions + [direction]
+                    frontier.push((coordinate, newActions, moveCost+cost))
+        return []
