@@ -19,42 +19,42 @@ def getGameState():
 #    return successors
 
 #generates list of final positions (RETURN LIST OF TUPLES - CONTAINS FINAL PIECE POSITION, SHAPE)
-def finalPositions(self, gameState):
+def finalPositions(self, board, piece):
     positions = []
     #if shape is square, loop through finding final positions just once, don't care about rotations
-    if gameState[5] == tetris_shapes[6]:
+    if piece == tetris_shapes[6]:
         for x in range(10):
-            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
+            positions.append(x, 0, piece)
             for y in range(22):
-                if not check_collision(gameState[2], gameState[5], (x,y)):
+                if not check_collision(board, piece, (x,y)):
                     position = positions[x]
-                    if y > position[2]:
+                    if y > position[1]:
                         positions.pop()
-                        positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
+                        positions.append(x, y, piece)
     #if shape is line, Z or S, loop through twice to take into account a rotation of the piece
-    if gameState[5] == tetris_shapes[5] or gameState[5] == tetris_shapes[1] or gameState[5] == tetris_shapes[2]:
-    #ADD IN ROTATION
+    if piece == tetris_shapes[5] or piece == tetris_shapes[1] or piece == tetris_shapes[2]:
         for z in range(2):
             for x in range(10):
-                positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
+                positions.append(x, 0, piece)
                 for y in range(22):
-                    if not check_collision(gameState[2], gameState[5], (x,y)):
+                    if not check_collision(board, piece, (x,y)):
                         position = positions[x]
-                        if y > position[2]:
+                        if y > position[1]:
                             positions.pop()
-                            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
+                            positions.append(x, y, piece)
+            piece = tetris.rotate_clockwise(piece)
     #all other pieces (L/J shapes) run four times to take into account the 3 rotations
     else:
-    #ADD IN ROTATION
-        for z in range(4)
+        for z in range(4):
             for x in range(10):
-                positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
+                positions.append(x, 0, piece)
                 for y in range(22):
-                    if not check_collision(gameState[2], gameState[5], (x,y)):
+                    if not check_collision(board, piece, (x,y)):
                         position = positions[x]
-                        if y > position[2]:
+                        if y > position[1]:
                             positions.pop()
-                            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
+                            positions.append(x, y, piece)
+            piece = tetris.rotate_clockwise(piece)
     
     return positions
 
