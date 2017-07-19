@@ -21,46 +21,45 @@ def generateSuccessor(self, gameState, stone, action):
 #need a version of generateSuccessor that takes a single state, and an update to the state(piece and position the piece is going to go) and generates a new state
 
 #generates list of final positions
-#CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
-def getActions(self, gameState):
+def finalPositions(self, gameState):
     positions = []
-    if TetrisApp.stone == tetris_shapes[6]:  #shape is square, run code once
+    if gameState[5] == tetris_shapes[6]:  #shape is square, run code once
         for x in range(10):
-            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
             for y in range(22):
-                if not check_collision(board, TetrisApp.stone, (x,y)):
+                if not check_collision(gameState[2], gameState[5], (x,y)):
                     position = positions[x]
                     if y > position[2]:
                         positions.pop()
-                        positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
-    if TetrisApp.stone == tetris_shapes[5] or TetrisApp.stone == tetris_shapes[1] or TetrisApp.stone == tetris_shapes[2]: #shape is line, Z or S, run twice (one rotation)
+                        positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
+    if gameState[5] == tetris_shapes[5] or gameState[5] == tetris_shapes[1] or gameState[5] == tetris_shapes[2]: #shape is line, Z or S, run twice (one rotation)
     #ADD IN ROTATION
         for z in range(2):
             for x in range(10):
-                positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+                positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
                 for y in range(22):
-                    if not check_collision(board, TetrisApp.stone, (x,y)):
+                    if not check_collision(gameState[2], gameState[5], (x,y)):
                         position = positions[x]
                         if y > position[2]:
                             positions.pop()
-                            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+                            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
     else: #run four times (three rotations)
     #ADD IN ROTATION
         for x in range(10):
-            positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,0)), x, 0)
+            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
             for y in range(22):
-                if not check_collision(board, TetrisApp.stone, (x,y)):
+                if not check_collision(gameState[2], gameState[5], (x,y)):
                     position = positions[x]
                     if y > position[2]:
                         positions.pop()
-                        positions.append(tetris.join_matrices(board, TetrisApp.stone, (x,y)), x, y)
+                        positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
     
     return positions
 
 class RandomAgent():
     #chooses randomly a final position from a list of all available final positions
     def getAction(self, gameState):
-        actionList = state.getActions(TetrisApp.stone)
+        actionList = state.finalPositions(TetrisApp.stone)
         return actionList[randint(0,len(actionList))]
 
 class ExpectimaxAgent():
@@ -75,7 +74,7 @@ class ExpectimaxAgent():
             if(tetris.TetrisApp.isGameOver(state,currentPiece)):
                 return -9999999
             successorList = list()
-            actionList = state.getActions(currentPiece)
+            actionList = state.finalPositions(currentPiece)
         #if no shape is set, generate list of shapes and get expected value (average) of best move with each shape
         else:
             avg = 0.0
