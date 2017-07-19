@@ -8,51 +8,53 @@ def getGameState():
 
 #generates a list of successors of potential states where the stone has moved left/right or rotated
 #CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
-def generateSuccessor(self, gameState, stone, action):
-    successors = []
-    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
-        successors.append(tetris.join_matrices(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
-    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
-        successors.append(tetris.join_matrices(board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
-    TetrisApp.rotate_stone
-    successors.append(tetris.join_matrices(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
-    return successors
+#def generateSuccessor(self, gameState, stone, action):
+#    successors = []
+#    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
+#        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
+#    if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
+#        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
+#    TetrisApp.rotate_stone
+#    successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
+#    return successors
 
-#need a version of generateSuccessor that takes a single state, and an update to the state(piece and position the piece is going to go) and generates a new state
-
-#generates list of final positions
+#generates list of final positions (RETURN LIST OF TUPLES - CONTAINS FINAL PIECE POSITION, SHAPE)
 def finalPositions(self, gameState):
     positions = []
-    if gameState[5] == tetris_shapes[6]:  #shape is square, run code once
+    #if shape is square, loop through finding final positions just once, don't care about rotations
+    if gameState[5] == tetris_shapes[6]:
         for x in range(10):
-            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
+            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
             for y in range(22):
                 if not check_collision(gameState[2], gameState[5], (x,y)):
                     position = positions[x]
                     if y > position[2]:
                         positions.pop()
-                        positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
-    if gameState[5] == tetris_shapes[5] or gameState[5] == tetris_shapes[1] or gameState[5] == tetris_shapes[2]: #shape is line, Z or S, run twice (one rotation)
+                        positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
+    #if shape is line, Z or S, loop through twice to take into account a rotation of the piece
+    if gameState[5] == tetris_shapes[5] or gameState[5] == tetris_shapes[1] or gameState[5] == tetris_shapes[2]:
     #ADD IN ROTATION
         for z in range(2):
             for x in range(10):
-                positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
+                positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
                 for y in range(22):
                     if not check_collision(gameState[2], gameState[5], (x,y)):
                         position = positions[x]
                         if y > position[2]:
                             positions.pop()
-                            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
-    else: #run four times (three rotations)
+                            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
+    #all other pieces (L/J shapes) run four times to take into account the 3 rotations
+    else:
     #ADD IN ROTATION
-        for x in range(10):
-            positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,0)), x, 0)
-            for y in range(22):
-                if not check_collision(gameState[2], gameState[5], (x,y)):
-                    position = positions[x]
-                    if y > position[2]:
-                        positions.pop()
-                        positions.append(tetris.join_matrices(gameState[2], gameState[5], (x,y)), x, y)
+        for z in range(4)
+            for x in range(10):
+                positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,0)), x, 0)
+                for y in range(22):
+                    if not check_collision(gameState[2], gameState[5], (x,y)):
+                        position = positions[x]
+                        if y > position[2]:
+                            positions.pop()
+                            positions.append(tetris.join_matrixes(gameState[2], gameState[5], (x,y)), x, y)
     
     return positions
 
