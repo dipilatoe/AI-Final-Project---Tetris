@@ -68,35 +68,36 @@ class ExpectimaxAgent():
     
     def getAction(self, gameState):
      
-        return self.value(gameState, self.depth-1, 1)
-    def value(self, state, depthLimit, currentDepth, currentPiece):
+        return self.value(gameState[2], 3, 0, gameState[5])
+    def value(self, board, depthLimit, currentDepth, currentPiece):
 
 		#get successor states if not terminal, returns low negative number if it is terminal.
         if(currentPiece is not 0):
-            if(tetris.TetrisApp.isGameOver(state,currentPiece)):
+            if(tetris.TetrisApp.isGameOver(board,currentPiece)):
                 return -9999999
             successorList = list()
-            actionList = state.finalPositions(currentPiece)
+            actionList = state.finalPositions(board, currentPiece)
         #if no shape is set, generate list of shapes and get expected value (average) of best move with each shape
         else:
             avg = 0.0
             for x in tetris.tetris_shapes:
-                avg = avg + value(state, depthLimit, currentDepth, x)
+                avg = avg + value(board, depthLimit, currentDepth, x)
             return avg/len(tetris.tetris_shapes)
 
 		#return action at top of tree
         if(currentDepth==0):
-            scoreHold, action = max([(self.value(generateSuccessor(state,TetrisApp.stone, x), depthLimit,1, 1),x) for x in actionList])
+            scoreHold, action = max([(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit,1, 1),x) for x in actionList])
             return action
         #for previewed piece
 	    if(currentDepth==1):
-            return max(self.value(generateSuccessor(state,TetrisApp.next_stone, x), depthLimit, 2, 0 )for x in actionList)
+            return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList)
 
 		#return score at max depth
         if(currentDepth==depthLimit and currentPiece is not 0):
-            return min(scoreEvaluationFunction(generateSuccessor(state,currentPiece,x) for x in actionList)
+            return min(scoreEvaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1])) for x in actionList)
 
 	    #all other cases (standard)
-        return max(self.value(generatesuccessor(state, currentPiece,x) depthLimit, currentDepth+1, 0) for x in actionList)
-    def evaluationFunction(state):
-        return state[4] * (1/len(getPieces.asList())
+        return max(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, currentDepth+1, 0) for x in actionList)
+    def evaluationFunction(board):
+        return board[4] * (1/len(getPieces.asList())
+		#^Need to change this to count filled pieces, not yet implemented.
