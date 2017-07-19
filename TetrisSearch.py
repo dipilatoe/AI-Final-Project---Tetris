@@ -18,7 +18,7 @@ def getGameState():
 #    successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
 #    return successors
 
-#generates list of final positions (RETURN LIST OF TUPLES - CONTAINS FINAL PIECE POSITION, SHAPE)
+#generates list of final positions (RETURN LIST OF TUPLES - CONTAINS PIECE'S FINAL X POSITION, FINAL Y POSITION, SHAPE)
 def finalPositions(self, board, piece):
     positions = []
     #if shape is square, loop through finding final positions just once, don't care about rotations
@@ -43,7 +43,7 @@ def finalPositions(self, board, piece):
                             positions.pop()
                             positions.append(x, y, piece)
             piece = tetris.rotate_clockwise(piece)
-    #all other pieces (L/J shapes) run four times to take into account the 3 rotations
+    #all other pieces (L/J/T shapes) run four times to take into account the 3 rotations
     else:
         for z in range(4):
             for x in range(10):
