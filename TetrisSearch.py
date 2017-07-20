@@ -112,7 +112,6 @@ class SolutionSearch():
             successors.append(tetris.join_matrixes(state[2], state[5], (state[0], state[1])), 'ROTATE')
         return successors
     
-    #IMPLEMENT QUEUE FOR FRONTIER
     def graphSearch(initialState, frontier):
         explored = set()	#list of nodes that have been explored
         frontier.push((initialState, []))	#creates the frontier
@@ -127,3 +126,23 @@ class SolutionSearch():
                     newActions = actions + successor[1]#add in action here somehow
                     frontier.push((successor, newActions))
         return []
+
+class Queue:
+    "A container with a first-in-first-out (FIFO) queuing policy."
+    def __init__(self):
+        self.list = []
+
+    def push(self,item):
+        "Enqueue the 'item' into the queue"
+        self.list.insert(0,item)
+
+    def pop(self):
+        """
+          Dequeue the earliest enqueued item still in the queue. This
+          operation removes the item from the queue.
+        """
+        return self.list.pop()
+
+    def isEmpty(self):
+        "Returns true if the queue is empty"
+        return len(self.list) == 0
