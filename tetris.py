@@ -148,7 +148,7 @@ class TetrisApp(object):
 			self.gameover = True
 #Added gameover method for optimal agent/evaluation function
 	def isGameOver(self,board1, stone1):
-        return check_collision(board1,stone1,(int(cols / 2 - len(stone1[0])/2), 0))
+		return check_collision(board1,stone1,(int(cols / 2 - len(stone1[0])/2), 0))
         
 	def init_game(self):
 		self.board = new_board()
