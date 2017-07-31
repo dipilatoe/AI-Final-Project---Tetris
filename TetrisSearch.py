@@ -78,18 +78,18 @@ class ExpectimaxAgent():
             return action
         #for previewed piece
         if(currentDepth==1):
-            return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList)
+            return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList))
 
-		#return score at max depth
+        #return score at max depth
         if(currentDepth==depthLimit and currentPiece is not 0):
-            return min(scoreEvaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1])) for x in actionList)
+            return min(scoreEvaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1])) for x in actionList))
 
 	    #all other cases (standard)
         return max(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, currentDepth+1, 0) for x in actionList)
     def evaluationFunction(board):
-        return board[4] * (1/len(getPieces.asList())
+        return board[4] * (1/len(getPieces.asList()))
 		#^Need to change this to count filled pieces, not yet implemented.
-        
+
 class SolutionSearch():
     
     def isGoalState(self, state, goalState):

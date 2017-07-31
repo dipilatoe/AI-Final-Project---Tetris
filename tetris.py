@@ -40,7 +40,7 @@
 # THE SOFTWARE.
 
 from random import randrange as rand
-import pygame, sys
+import pygame, sys, TetrisSearch
 
 # The configuration
 cell_size =	18
