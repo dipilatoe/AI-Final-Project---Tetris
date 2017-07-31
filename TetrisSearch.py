@@ -77,51 +77,70 @@ class ExpectimaxAgent():
             scoreHold, action = max([(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit,1, 1),x) for x in actionList])
             return action
         #for previewed piece
-	    if(currentDepth==1):
-            return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList)
+        if(currentDepth==1):
+            return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList))
 
-		#return score at max depth
+        #return score at max depth
         if(currentDepth==depthLimit and currentPiece is not 0):
-            return min(scoreEvaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1])) for x in actionList)
+            return min(scoreEvaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1])) for x in actionList))
 
 	    #all other cases (standard)
         return max(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, currentDepth+1, 0) for x in actionList)
     def evaluationFunction(board):
-        return board[4] * (1/len(getPieces.asList())
+        return board[4] * (1/len(getPieces.asList()))
 		#^Need to change this to count filled pieces, not yet implemented.
-        
+
 class SolutionSearch():
     
-    def isGoalState():
-    
+    def isGoalState(self, state, goalState):
+        return state[2] == goalState
     #generates a list of successors of potential states where the stone has moved left/right or rotated
-    #CHANGE TO USE GAMESTATE INSTEAD OF DIRECTLY REFERENCING VARIABLES IN TETRIS.PY
-    def generateSuccessor(self, gameState, stone, action):
+    #state[2] = board
+    #state[5] = stone
+    #state[0] = stone x coordinate
+    #state[1] = stone y coordinate
+    def getSuccessors(self, state):
         successors = []
-        if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x - 1, TetrisApp.stone_y)):
-            successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x-1, TetrisApp.stone_y)))
-        if not tetris.check_collision(board, TetrisApp.stone, (TetrisApp.stone_x + 1, TetrisApp.stone_y)):
-            successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x+1, TetrisApp.stone_y)))
-        TetrisApp.rotate_stone
-        successors.append(tetris.join_matrixes(board, TetrisApp.stone, (TetrisApp.stone_x, TetrisApp.stone_y)))
+        if not tetris.check_collision(state[2], state[5], (state[0] - 1, state[1])):
+            successors.append(tetris.join_matrixes(state[2], state[5], (state[0] - 1, state[1])), 'LEFT')
+        if not tetris.check_collision(state[2], state[5], (state[0] + 1, state[1])):
+            successors.append(tetris.join_matrixes(state[2], state[5], (state[0] + 1, state[1])), 'RIGHT')
+        state[5] = tetris.rotate_clockwise(state[5])
+        if not tetris.check_collision(state[2], state[5], (state[0], state[1])):
+            successors.append(tetris.join_matrixes(state[2], state[5], (state[0], state[1])), 'ROTATE')
         return successors
     
-    #IMPLEMENT QUEUE FOR FRONTIER
-    #ADAPT TO TETRIS
-    def graphSearch(problem, frontier):
+    def graphSearch(initialState, goalState, frontier):
         explored = set()	#list of nodes that have been explored
-        initialState = problem.getStartState()	#fetches the initial state of the problem
-        
-        frontier.push((initialState, [], 0))	#creates the frontier
+        frontier.push((initialState, []))	#creates the frontier
         while frontier:	#continues until the frontier is empty, at the end just returns an empty set in absense of a solution
-            node, actions, cost = frontier.pop()	#removes from the frontier the current node to be expanded
-            if not node in explored: #if that node is not in explored then we expand it and also add it to explored
-                explored.add(node)
-                if problem.isGoalState(node): #goal state check
+            state, actions = frontier.pop()	#removes from the frontier the current node to be expanded
+            if not state in explored: #if that node is not in explored then we expand it and also add it to explored
+                explored.add(state)
+                if isGoalState(state, goalState): #goal state check
                     return actions
-                successors = problem.getSuccessors(node) #expanding the node
+                successors = getSuccessors(state) #expanding the node
                 for successor in successors:	#adding each expansion into the frontier
-                    coordinate, direction, moveCost = successor
-                    newActions = actions + [direction]
-                    frontier.push((coordinate, newActions, moveCost+cost))
+                    newActions = actions + successor[1]#add in action here somehow
+                    frontier.push((successor, newActions))
         return []
+
+class Queue:
+    "A container with a first-in-first-out (FIFO) queuing policy."
+    def __init__(self):
+        self.list = []
+
+    def push(self,item):
+        "Enqueue the 'item' into the queue"
+        self.list.insert(0,item)
+
+    def pop(self):
+        """
+          Dequeue the earliest enqueued item still in the queue. This
+          operation removes the item from the queue.
+        """
+        return self.list.pop()
+
+    def isEmpty(self):
+        "Returns true if the queue is empty"
+        return len(self.list) == 0
