@@ -77,7 +77,7 @@ class ExpectimaxAgent():
             scoreHold, action = max([(self.value(tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit,1, 1),x) for x in actionList])
             return action
         #for previewed piece
-	    if(currentDepth==1):
+        if(currentDepth==1):
             return max(self.value((tetris.join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList)
 
 		#return score at max depth
