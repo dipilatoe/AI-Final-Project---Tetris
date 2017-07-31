@@ -1,3 +1,4 @@
+import pygame, sys
 import tetris
 from tetris import TetrisApp
 import util
@@ -11,7 +12,7 @@ class SearchAgent(Agent):
         if fn not in dir(TetrisSearch):
             raise AttributeError, fn + " is not in TetrisSearch.py."
         func = getattr(TetrisSearch, fn)
-
+        self.searchFunction = func
 
     def registerInitialState(self, state):
         """
@@ -25,6 +26,7 @@ class SearchAgent(Agent):
         self.actions = self.searchFunction(problem)
         print("Path found in %.1f seconds" % (time.time() - startTime))
 
+
     def getAction(self, state):
         """
         Returns the next action in the path chosen earlier (in
@@ -32,11 +34,35 @@ class SearchAgent(Agent):
         state = a GameState object (TetrisSearch.py)
 
         """
+        dont_burn_my_cpu = pygame.time.Clock()
+        key_actions = {
+			'ESCAPE':	state.quit,
+			'LEFT':		lambda:state.move(-1),
+			'RIGHT':	lambda:state.move(+1),
+			'DOWN':		lambda:state.drop(True),
+			'UP':		state.rotate_stone,
+			'p':		state.toggle_pause,
+			'SPACE':	state.start_game,
+			'RETURN':	state.insta_drop
+		}
+
         self.actionIndex = 0
         i = self.actionIndex
         self.actionIndex += 1
-        if i < len(self.actions):
-            return self.actions[i]
+        for event in pygame.eveng.get():
+            if event.type == pygame.USEREVENT+1:
+    			self.drop(False)
+    		elif event.type == pygame.QUIT:
+    			 self.quit()
+            elif i < len(self.actions):
+                for key in key_actions:
+                    if self.actions[i] == eval(key):
+                        return key_actions[key]()
+
+				if event.type == pygame.USEREVENT+1:
+					self.drop(False)
+				elif event.type == pygame.QUIT:
+					self.quit()
+			
         else:
-            self.gameover = True
-            return self.gameover
+            return TetrisApp.quit()
