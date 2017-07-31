@@ -36,33 +36,31 @@ class SearchAgent(Agent):
         """
         dont_burn_my_cpu = pygame.time.Clock()
         key_actions = {
-			'ESCAPE':	state.quit,
-			'LEFT':		lambda:state.move(-1),
-			'RIGHT':	lambda:state.move(+1),
-			'DOWN':		lambda:state.drop(True),
-			'UP':		state.rotate_stone,
-			'p':		state.toggle_pause,
-			'SPACE':	state.start_game,
-			'RETURN':	state.insta_drop
-		}
+            'ESCAPE':	state.quit,
+            'LEFT':		lambda:state.move(-1),
+            'RIGHT':	lambda:state.move(+1),
+            'DOWN':		lambda:state.drop(True),
+            'UP':		state.rotate_stone,
+            'p':		state.toggle_pause,
+            'SPACE':	state.start_game,
+            'RETURN':	state.insta_drop
+        }
 
         self.actionIndex = 0
         i = self.actionIndex
         self.actionIndex += 1
         for event in pygame.eveng.get():
             if event.type == pygame.USEREVENT+1:
-    			self.drop(False)
-    		elif event.type == pygame.QUIT:
-    			 self.quit()
+                self.drop(False)
+            elif event.type == pygame.QUIT:
+                self.quit()
             elif i < len(self.actions):
                 for key in key_actions:
                     if self.actions[i] == eval(key):
                         return key_actions[key]()
-
-				if event.type == pygame.USEREVENT+1:
-					self.drop(False)
-				elif event.type == pygame.QUIT:
-					self.quit()
-			
+                if event.type == pygame.USEREVENT+1:
+                    self.drop(False)
+                elif event.type == pygame.QUIT:
+                    self.quit()
         else:
             return TetrisApp.quit()
