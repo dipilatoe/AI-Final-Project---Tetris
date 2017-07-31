@@ -107,7 +107,7 @@ class SolutionSearch():
             successors.append(tetris.join_matrixes(state[2], state[5], (state[0] + 1, state[1])), 'RIGHT')
         state[5] = tetris.rotate_clockwise(state[5])
         if not tetris.check_collision(state[2], state[5], (state[0], state[1])):
-            successors.append(tetris.join_matrixes(state[2], state[5], (state[0], state[1])), 'ROTATE')
+            successors.append(tetris.join_matrixes(state[2], state[5], (state[0], state[1])), 'UP')
         return successors
     
     def graphSearch(initialState, goalState, frontier):
