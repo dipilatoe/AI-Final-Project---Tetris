@@ -1,11 +1,10 @@
 import pygame, sys
 import tetris
 from tetris import TetrisApp
-import util
 import time
 import TetrisSearch
 
-class SearchAgent(Agent):
+class SearchAgent():
 
     #Get the search function from its name
     def __init__(self, fn = "breadthFirstSearch"):
