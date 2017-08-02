@@ -209,7 +209,7 @@ class GreedyAgent():
     def getAction(self, GameState):
         actionList = GameState.finalPositions(board, GameState[5])
         scoreHold, action = max([(evaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1]))),x) for x in actionList])
-            return action
+        return action
 
     def evaluationFunction(board):
         return board[4] * (1/len(getPieces.asList()))
