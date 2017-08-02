@@ -235,8 +235,7 @@ class SolutionSearch():
                     return actions
                 successors = self.getSuccessors(state) #expanding the node
                 for successor in successors:    #adding each expansion into the frontier
-                    newActions = actions + successor[1]
-                    frontier.push((successor, newActions))
+                    frontier.push((successor, actions.append(successor[1])))
         return []
 
 class Queue:
