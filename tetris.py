@@ -120,14 +120,14 @@ def new_board():
 
 
 #generates list of final positions (RETURN LIST OF TUPLES - CONTAINS PIECE'S FINAL X POSITION, FINAL Y POSITION, SHAPE)
-def finalPositions(board, piece):
+def finalPositions(board2, piece):
     positions = []
     #if shape is square, loop through finding final positions just once, don't care about rotations
     if piece == tetris_shapes[6]:
         for x in range(10):
             positions.append((x, 0, piece))
             for y in range(22):
-                if not check_collision(board, piece, (x,y)):
+                if not check_collision(board2, piece, (x,y)):
                     position = positions[x]
                     if y > position[1]:
                         positions.pop()
@@ -138,7 +138,7 @@ def finalPositions(board, piece):
             for x in range(10):
                 positions.append((x, 0, piece))
                 for y in range(22):
-                    if not check_collision(board, piece, (x,y)):
+                    if not check_collision(board2, piece, (x,y)):
                         position = positions[x]
                         if y > position[1]:
                             positions.pop()
@@ -150,7 +150,7 @@ def finalPositions(board, piece):
             for x in range(10):
                 positions.append((x, 0, piece))
                 for y in range(22):
-                    if not check_collision(board, piece, (x,y)):
+                    if not check_collision(board2, piece, (x,y)):
                         position = positions[x]
                         if y > position[1]:
                             positions.pop()
@@ -486,9 +486,9 @@ Press space to continue""" % self.score)
                     self.drop(False)
                 elif event.type == pygame.QUIT:
                     self.quit()
-                elif i < len(self.actions):
+                elif i < len(actions):
                     for key in key_actions:
-                        if self.actions[i] == eval(key):
+                        if actions[i] == eval(key):
                             key_actions[key]()
                             i += 1
 
