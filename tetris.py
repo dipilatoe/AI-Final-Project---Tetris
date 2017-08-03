@@ -85,9 +85,7 @@ tetris_shapes = [
 ]
 
 def rotate_clockwise(shape):
-    return [ [ shape[y][x]
-            for y in xrange(len(shape)) ]
-        for x in xrange(len(shape[0]) - 1, -1, -1) ]
+    return [ [ shape[y][x] for y in xrange(len(shape)) ] for x in xrange(len(shape[0]) - 1, -1, -1) ]
 
 def check_collision(board, shape, offset):
     off_x, off_y = offset
@@ -112,22 +110,21 @@ def join_matrixes(mat1, mat2, mat2_off):
     return mat1
 
 def new_board():
-    board = [ [ 0 for x in xrange(cols) ]
-            for y in xrange(rows) ]
+    board = [ [ 0 for x in xrange(cols) ] for y in xrange(rows) ]
     board += [[ 1 for x in xrange(cols)]]
     return board
 
 
 
 #generates list of final positions (RETURN LIST OF TUPLES - CONTAINS PIECE'S FINAL X POSITION, FINAL Y POSITION, SHAPE)
-def finalPositions(board2, piece):
+def finalPositions(board, piece):
     positions = []
     #if shape is square, loop through finding final positions just once, don't care about rotations
     if piece == tetris_shapes[6]:
         for x in range(10):
             positions.append((x, 0, piece))
             for y in range(22):
-                if not check_collision(board2, piece, (x,y)):
+                if not check_collision(board, piece, (x,y)):
                     position = positions[x]
                     if y > position[1]:
                         positions.pop()
@@ -138,7 +135,7 @@ def finalPositions(board2, piece):
             for x in range(10):
                 positions.append((x, 0, piece))
                 for y in range(22):
-                    if not check_collision(board2, piece, (x,y)):
+                    if not check_collision(board, piece, (x,y)):
                         position = positions[x]
                         if y > position[1]:
                             positions.pop()
@@ -150,7 +147,7 @@ def finalPositions(board2, piece):
             for x in range(10):
                 positions.append((x, 0, piece))
                 for y in range(22):
-                    if not check_collision(board2, piece, (x,y)):
+                    if not check_collision(board, piece, (x,y)):
                         position = positions[x]
                         if y > position[1]:
                             positions.pop()
@@ -295,9 +292,7 @@ class TetrisApp(object):
         self.stone_x = int(cols / 2 - len(self.stone[0])/2)
         self.stone_y = 0
 
-        if check_collision(self.board,
-                           self.stone,
-                           (self.stone_x, self.stone_y)):
+        if check_collision(self.board, self.stone, (self.stone_x, self.stone_y)):
             self.gameover = True
     #Added gameover method for optimal agent/evaluation function
     def isGameOver(self,board1, stone1):
@@ -345,16 +340,8 @@ class TetrisApp(object):
         for y, row in enumerate(matrix):
             for x, val in enumerate(row):
                 if val:
-                    pygame.draw.rect(
-                        self.screen,
-                        colors[val],
-                        pygame.Rect(
-                            (off_x+x) *
-                              cell_size,
-                            (off_y+y) *
-                              cell_size,
-                            cell_size,
-                            cell_size),0)
+                    pygame.draw.rect(self.screen, colors[val],
+                        pygame.Rect((off_x+x) * cell_size, (off_y+y) * cell_size, cell_size, cell_size),0)
 
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
@@ -373,9 +360,7 @@ class TetrisApp(object):
                 new_x = 0
             if new_x > cols - len(self.stone[0]):
                 new_x = cols - len(self.stone[0])
-            if not check_collision(self.board,
-                                   self.stone,
-                                   (new_x, self.stone_y)):
+            if not check_collision(self.board, self.stone, (new_x, self.stone_y)):
                 self.stone_x = new_x
     def quit(self):
         self.center_msg("Exiting...")
@@ -386,20 +371,14 @@ class TetrisApp(object):
         if not self.gameover and not self.paused:
             self.score += 1 if manual else 0
             self.stone_y += 1
-            if check_collision(self.board,
-                               self.stone,
-                               (self.stone_x, self.stone_y)):
-                self.board = join_matrixes(
-                  self.board,
-                  self.stone,
-                  (self.stone_x, self.stone_y))
+            if check_collision(self.board, self.stone, (self.stone_x, self.stone_y)):
+                self.board = join_matrixes(self.board, self.stone, (self.stone_x, self.stone_y))
                 self.new_stone()
                 cleared_rows = 0
                 while True:
                     for i, row in enumerate(self.board[:-1]):
                         if 0 not in row:
-                            self.board = remove_row(
-                              self.board, i)
+                            self.board = remove_row(self.board, i)
                             cleared_rows += 1
                             break
                     else:
@@ -416,9 +395,7 @@ class TetrisApp(object):
     def rotate_stone(self):
         if not self.gameover and not self.paused:
             new_stone = rotate_clockwise(self.stone)
-            if not check_collision(self.board,
-                                   new_stone,
-                                   (self.stone_x, self.stone_y)):
+            if not check_collision(self.board, new_stone, (self.stone_x, self.stone_y)):
                 self.stone = new_stone
 
     def toggle_pause(self):
@@ -454,22 +431,13 @@ Press space to continue""" % self.score)
                 if self.paused:
                     self.center_msg("Paused")
                 else:
-                    pygame.draw.line(self.screen,
-                        (255,255,255),
-                        (self.rlim+1, 0),
-                        (self.rlim+1, self.height-1))
-                    self.disp_msg("Next:", (
-                        self.rlim+cell_size,
-                        2))
-                    self.disp_msg("Score: %d\n\nLevel: %d\
-\nLines: %d" % (self.score, self.level, self.lines),
-                        (self.rlim+cell_size, cell_size*5))
+                    pygame.draw.line(self.screen, (255,255,255), (self.rlim+1, 0), (self.rlim+1, self.height-1))
+                    self.disp_msg("Next:", (self.rlim+cell_size, 2))
+                    self.disp_msg("Score: %d\n\nLevel: %d\\nLines: %d" % (self.score, self.level, self.lines), (self.rlim+cell_size, cell_size*5))
                     self.draw_matrix(self.bground_grid, (0,0))
                     self.draw_matrix(self.board, (0,0))
-                    self.draw_matrix(self.stone,
-                        (self.stone_x, self.stone_y))
-                    self.draw_matrix(self.next_stone,
-                        (cols+1,2))
+                    self.draw_matrix(self.stone, (self.stone_x, self.stone_y))
+                    self.draw_matrix(self.next_stone, (cols+1,2))
             pygame.display.update()
 
             state = self.getGameState()
