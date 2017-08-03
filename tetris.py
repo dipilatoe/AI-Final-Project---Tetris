@@ -164,7 +164,7 @@ class RandomAgent():
     #chooses randomly a final position from a list of all available final positions
     def getAction(gameState):
         actionList = finalPositions(gameState[2], gameState[5])
-        return actionList[randint(0,len(actionList))]
+        return actionList[randint(0,len(actionList)-1)]
 
 class ExpectimaxAgent():
     
@@ -216,8 +216,8 @@ class GreedyAgent():
 
 class SolutionSearch():
     @classmethod
-    def isGoalState(self, state, goalState):
-        return state[2] == goalState
+    def isGoalState(self, currentState, goalState):
+        return (currentState[0] == goalState[0] and currentState[1] == goalState[1])
     #generates a list of successors of potential states where the stone has moved left/right or rotated
     #state[2] = board
     #state[5] = stone
@@ -227,17 +227,17 @@ class SolutionSearch():
     def getSuccessors(self, state):
         successors = []
         if not check_collision(state[2], state[5], (state[0] - 1, state[1])):
-            successors.append((join_matrixes(state[2], state[5], (state[0] - 1, state[1])), 'LEFT'))
+            successors.append(((state[0] - 1), state[1], join_matrixes(state[2], state[5], (state[0] - 1, state[1])), state[3], state[4], state[5], 'LEFT'))
         if not check_collision(state[2], state[5], (state[0] + 1, state[1])):
-            successors.append((join_matrixes(state[2], state[5], (state[0] + 1, state[1])), 'RIGHT'))
+            successors.append(((state[0] + 1), state[1], join_matrixes(state[2], state[5], (state[0] + 1, state[1])), state[3], state[4], state[5], 'RIGHT'))
         if not check_collision(state[2], rotate_clockwise(state[5]), (state[0], state[1])):
-            successors.append((join_matrixes(state[2], rotate_clockwise(state[5]), (state[0], state[1])), 'UP'))
+            successors.append((state[0], state[1], join_matrixes(state[2], rotate_clockwise(state[5]), (state[0], state[1])), state[3], state[4], rotate_clockwise(state[5]), 'UP'))
         return successors
     @classmethod
     def graphSearch(self, initialState, goalState, frontier):
         explored = []    #list of nodes that have been explored
         frontier.push((initialState, []))   #creates the frontier
-        while frontier: #continues until the frontier is empty, at the end just returns an empty set in absense of a solution
+        while not frontier.isEmpty(): #continues until the frontier is empty, at the end just returns an empty set in absense of a solution
             state, actions = frontier.pop() #removes from the frontier the current node to be expanded
             if not state in explored: #if that node is not in explored then we expand it and also add it to explored
                 explored.append(state)
@@ -245,7 +245,8 @@ class SolutionSearch():
                     return actions
                 successors = self.getSuccessors(state) #expanding the node
                 for successor in successors:    #adding each expansion into the frontier
-                    frontier.push((successor, actions.append(successor[1])))
+                    actions.append(successor[1])
+                    frontier.push((successor, actions))
         return []
 
 class Queue:
@@ -298,7 +299,7 @@ class TetrisApp(object):
                            self.stone,
                            (self.stone_x, self.stone_y)):
             self.gameover = True
-#Added gameover method for optimal agent/evaluation function
+    #Added gameover method for optimal agent/evaluation function
     def isGameOver(self,board1, stone1):
         return check_collision(board1,stone1,(int(cols / 2 - len(stone1[0])/2), 0))
         
