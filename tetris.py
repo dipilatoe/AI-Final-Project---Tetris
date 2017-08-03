@@ -433,7 +433,7 @@ Press space to continue""" % self.score)
                 else:
                     pygame.draw.line(self.screen, (255,255,255), (self.rlim+1, 0), (self.rlim+1, self.height-1))
                     self.disp_msg("Next:", (self.rlim+cell_size, 2))
-                    self.disp_msg("Score: %d\n\nLevel: %d\\nLines: %d" % (self.score, self.level, self.lines), (self.rlim+cell_size, cell_size*5))
+                    self.disp_msg("Score: %d\n\nLevel: %d\nLines: %d" % (self.score, self.level, self.lines), (self.rlim+cell_size, cell_size*5))
                     self.draw_matrix(self.bground_grid, (0,0))
                     self.draw_matrix(self.board, (0,0))
                     self.draw_matrix(self.stone, (self.stone_x, self.stone_y))
@@ -442,7 +442,8 @@ Press space to continue""" % self.score)
 
             state = self.getGameState()
             #this line below runs the Random Agent
-            actions = SolutionSearch.graphSearch(state, RandomAgent.getAction(state), Queue())
+            actions = ('RIGHT', 'RIGHT', 'RIGHT', 'UP', 'LEFT')
+            #SolutionSearch.graphSearch(state, RandomAgent.getAction(state), Queue())
             #this line below runs the Optimal Agent
 
             #this line below runs the Greedy Agent
@@ -454,6 +455,10 @@ Press space to continue""" % self.score)
                     self.drop(False)
                 elif event.type == pygame.QUIT:
                     self.quit()
+                elif event.type == pygame.KEYDOWN:
+                    for key in key_actions:
+                        if event.key == eval("pygame.K_"+key):
+                            key_actions[key]()
                 elif i < len(actions)-1:
                     for key in key_actions:
                         if actions[i] == eval(key):
