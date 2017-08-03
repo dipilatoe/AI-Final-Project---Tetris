@@ -486,7 +486,7 @@ Press space to continue""" % self.score)
                     self.drop(False)
                 elif event.type == pygame.QUIT:
                     self.quit()
-                elif i < len(actions):
+                elif i < len(actions)-1:
                     for key in key_actions:
                         if actions[i] == eval(key):
                             key_actions[key]()
