@@ -114,7 +114,8 @@ def new_board():
     board += [[ 1 for x in xrange(cols)]]
     return board
 
-#WIP method to replace our use of join_matrixes
+#custom method to take the board and a piece at a given location and a position to move the piece to
+#and produce a new board with the piece in the new position
 def newBoard(board, x, y, stone, newX, newY):
     for yB in range(y, y+len(stone)):
         for xB in range(x, x+len(stone[0])):
