@@ -114,7 +114,17 @@ def new_board():
     board += [[ 1 for x in xrange(cols)]]
     return board
 
-
+#WIP method to replace our use of join_matrixes
+def newBoard(board, x, y, stone, newX, newY):
+    for yB in range(y, y+len(stone)):
+        for xB in range(x, x+len(stone[0])):
+            if stone[yB-y][xB-x] != 0:
+                board[yB][xB] = 0
+    for yB in range(y, y+len(stone)):
+        for xB in range(x, x+len(stone[0])):
+            if stone[yB-y][xB-x] != 0:
+                board[yB + newY][xB + newX] = 1
+    return board
 
 #generates list of final positions (RETURN LIST OF TUPLES - CONTAINS PIECE'S FINAL X POSITION, FINAL Y POSITION, SHAPE)
 def finalPositions(board, piece):
@@ -130,7 +140,7 @@ def finalPositions(board, piece):
                         positions.pop()
                         positions.append((x, y, piece))
     #if shape is line, Z or S, loop through twice to take into account a rotation of the piece
-    if piece == tetris_shapes[5] or piece == tetris_shapes[1] or piece == tetris_shapes[2]:
+    elif piece == tetris_shapes[5] or piece == tetris_shapes[1] or piece == tetris_shapes[2]:
         for z in range(2):
             for x in range(10):
                 positions.append((x, 0, piece))
@@ -142,7 +152,7 @@ def finalPositions(board, piece):
                             positions.append((x, y, piece))
             piece = rotate_clockwise(piece)
     #all other pieces (L/J/T shapes) run four times to take into account the 3 rotations
-    else:
+    elif piece == tetris_shapes[0] or piece == tetris_shapes[3] or piece == tetris_shapes[4]:
         for z in range(4):
             for x in range(10):
                 positions.append((x, 0, piece))
@@ -161,6 +171,7 @@ class RandomAgent():
     #chooses randomly a final position from a list of all available final positions
     def getAction(gameState):
         actionList = finalPositions(gameState[2], gameState[5])
+        print actionList
         return actionList[randint(0,len(actionList)-1)]
 
 class ExpectimaxAgent():
@@ -200,7 +211,6 @@ class ExpectimaxAgent():
 
     def evaluationFunction(board):
         return board[4] * (1/len(getPieces.asList()))
-        #^Need to change this to count filled pieces, not yet implemented.
 
 class GreedyAgent():
     def getAction(self, GameState):
@@ -223,12 +233,18 @@ class SolutionSearch():
     @classmethod
     def getSuccessors(self, state):
         successors = []
+        #moving left/right
         if not check_collision(state[2], state[5], (state[0] - 1, state[1])):
-            successors.append(((state[0] - 1), state[1], join_matrixes(state[2], state[5], (state[0] - 1, state[1])), state[3], state[4], state[5], 'LEFT'))
+            successors.append(((state[0] - 1), state[1], newBoard(state[2], state[0], state[1], state[5], state[0] - 1, state[1]), state[3], state[4], state[5], 'LEFT'))
+        #moving right
         if not check_collision(state[2], state[5], (state[0] + 1, state[1])):
-            successors.append(((state[0] + 1), state[1], join_matrixes(state[2], state[5], (state[0] + 1, state[1])), state[3], state[4], state[5], 'RIGHT'))
+            successors.append(((state[0] + 1), state[1], newBoard(state[2], state[0], state[1], state[5], state[0] + 1, state[1]), state[3], state[4], state[5], 'RIGHT'))
+        #rotate stone
         if not check_collision(state[2], rotate_clockwise(state[5]), (state[0], state[1])):
-            successors.append((state[0], state[1], join_matrixes(state[2], rotate_clockwise(state[5]), (state[0], state[1])), state[3], state[4], rotate_clockwise(state[5]), 'UP'))
+            successors.append((state[0], state[1], newBoard(state[2], state[0], state[1], rotate_clockwise(state[5]), state[0], state[1]), state[3], state[4], rotate_clockwise(state[5]), 'UP'))
+        #drop down one line
+        if not check_collision(state[2], state[5], (state[0], state[1] + 1)):
+            successors.append((state[0], state[1] + 1, newBoard(state[2], state[0], state[1], state[5], state[0], state[1] + 1)))
         return successors
     @classmethod
     def graphSearch(self, initialState, goalState, frontier):
@@ -242,8 +258,8 @@ class SolutionSearch():
                     return actions
                 successors = self.getSuccessors(state) #expanding the node
                 for successor in successors:    #adding each expansion into the frontier
-                    actions.append(successor[1])
-                    frontier.push((successor, actions))
+                    newActions = actions + [successor[6]]
+                    frontier.push((successor, newActions))
         return []
 
 class Queue:
@@ -417,16 +433,16 @@ class TetrisApp(object):
             'SPACE':    self.start_game,
             'RETURN':   self.insta_drop
         }
-
+        
         self.gameover = False
         self.paused = False
 
         dont_burn_my_cpu = pygame.time.Clock()
+        
         while 1:
             self.screen.fill((0,0,0))
             if self.gameover:
-                self.center_msg("""Game Over!\nYour score: %d
-Press space to continue""" % self.score)
+                self.center_msg("""Game Over!\nYour score: %d\nPress space to continue""" % self.score)
             else:
                 if self.paused:
                     self.center_msg("Paused")
@@ -442,14 +458,12 @@ Press space to continue""" % self.score)
 
             state = self.getGameState()
             #this line below runs the Random Agent
-            actions = ('RIGHT', 'RIGHT', 'RIGHT', 'UP', 'LEFT')
-            #SolutionSearch.graphSearch(state, RandomAgent.getAction(state), Queue())
+            actions = SolutionSearch.graphSearch(state, RandomAgent.getAction(state), Queue())
             #this line below runs the Optimal Agent
-
+            actions = SolutionSearch.graphSearch(state, ExpectimaxAgent.getAction(state), Queue())
             #this line below runs the Greedy Agent
+            actions = SolutionSearch.graphSearch(state, GreedyAgent.getAction(state), Queue())
 
-
-            i = 0
             for event in pygame.event.get():
                 if event.type == pygame.USEREVENT+1:
                     self.drop(False)
@@ -459,12 +473,7 @@ Press space to continue""" % self.score)
                     for key in key_actions:
                         if event.key == eval("pygame.K_"+key):
                             key_actions[key]()
-                elif i < len(actions)-1:
-                    for key in key_actions:
-                        if actions[i] == eval(key):
-                            key_actions[key]()
-                            i += 1
-
+                
             dont_burn_my_cpu.tick(maxfps)
 
 if __name__ == '__main__':
