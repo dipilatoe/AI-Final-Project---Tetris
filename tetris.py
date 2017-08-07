@@ -196,18 +196,18 @@ class ExpectimaxAgent():
 
         #return action at top of tree
         if(currentDepth==0):
-            scoreHold, action = max([(self.value(join_matrixes(board,x[2], (x[0],x[1])), depthLimit,1, 1),x) for x in actionList])
+            scoreHold, action = max([(self.value(newBoard(board,x[2],stone_x,stone_y, x[0],x[1]), depthLimit,1, 1),x) for x in actionList])
             return action
         #for previewed piece
         if(currentDepth==1):
-            return max(self.value((join_matrixes(board,x[2], (x[0],x[1])), depthLimit, 2, 0 )for x in actionList))
+            return max(self.value((newBoard(board,x[2],stone_x,stone_y, x[0],x[1])), depthLimit, 2, 0 )for x in actionList))
 
         #return score at max depth
         if(currentDepth==depthLimit and currentPiece is not 0):
-            return min(evaluationFunction(join_matrixes(board,x[2], (x[0],x[1])) for x in actionList))
+            return min(evaluationFunction(newBoard(board,x[2],stone_x,stone_y, x[0],x[1])) for x in actionList))
 
         #all other cases (standard)
-        return max(self.value(join_matrixes(board,x[2], (x[0],x[1])), depthLimit, currentDepth+1, 0) for x in actionList)
+        return max(self.value(newBoard(board,x[2],stone_x,stone_y, x[0],x[1])), depthLimit, currentDepth+1, 0) for x in actionList)
 
     def evaluationFunction(board):
         return board[4] * (1/len(getPieces.asList()))
@@ -215,7 +215,7 @@ class ExpectimaxAgent():
 class GreedyAgent():
     def getAction(self, GameState):
         actionList = GameState.finalPositions(board, GameState[5])
-        scoreHold, action = max([(evaluationFunction(tetris.join_matrixes(board,x[2], (x[0],x[1]))),x) for x in actionList])
+        scoreHold, action = max([(evaluationFunction(newBoard(board,x[2],stone_x,stone_y, x[0],x[1]))),x) for x in actionList])
         return action
 
     def evaluationFunction(board):
